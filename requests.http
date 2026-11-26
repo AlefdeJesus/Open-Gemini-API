@@ -1,0 +1,110 @@
+### ==============================================================================
+### ARQUIVO DE REQUISIÇÕES HTTP (REST CLIENT / VS CODE / THUNDER CLIENT)
+### ==============================================================================
+### Dica: No VS Code com a extensão "REST Client", clique em "Send Request"
+### acima de cada bloco para testar a requisição.
+### ==============================================================================
+
+@baseUrl = http://localhost:3333/api2
+# @baseUrl = https://api.example.com/api2
+@apiKey = sua_chave_secreta_aqui
+
+### 1. Health Check (Público)
+GET {{baseUrl}}/health
+Accept: application/json
+
+### 2. Listar Vozes Disponíveis no Edge TTS (Público)
+GET {{baseUrl}}/voices
+Accept: application/json
+
+### 3. Geração de Texto
+POST {{baseUrl}}/generate-text
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "prompt": "Explique resumidamente o que é computação quântica em 3 tópicos diretos."
+}
+
+### 4. Geração de Áudio - Narração Direta (TTS / n8n)
+POST {{baseUrl}}/generate-audio
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "text": "Documentos recém-desclassificados revelam relatos perturbadores sobre o caso da Operação Prato na Amazônia.\n\nMoradores locais relataram avistamentos recorrentes, feixes luminosos e marcas inexplicáveis.",
+  "voice": "pt-BR-AntonioNeural",
+  "modo": "suspense",
+  "rate": "-3%",
+  "pitch": "-3%"
+}
+
+### 4.1. Geração de Áudio - Modo Sono / Meditação / Fala Mansa (pt-BR-FranciscaNeural)
+POST {{baseUrl}}/generate-audio
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "text": "Feche os olhos suavemente e respire fundo... Puxe o ar devagar, e solte liberando qualquer tensão acumulada ao longo do dia.\n\nSinta o seu corpo ficando cada vez mais pesado e confortável na cama. Não há nada que você precise fazer agora, nenhum lugar para onde ir. Este é o seu momento de paz e repouso.\n\nDeixe que todos os pensamentos passem como nuvens suaves pelo céu da noite. A cada respiração, uma onda de calma e tranquilidade envolve todo o seu ser... Apenas relaxe, e entregue-se a um sono profundo e reparador.",
+  "voice": "pt-BR-FranciscaNeural",
+  "modo": "sono",
+  "rate": "-20%",
+  "pitch": "-2%",
+  "volume": "soft"
+}
+
+### 4.2. Geração de Áudio - Modo Sono com Voz Masculina Suave (pt-BR-AntonioNeural)
+POST {{baseUrl}}/generate-audio
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "text": "Feche os olhos suavemente... E respire fundo. Puxe o ar devagar... E solte... Liberando toda a tensão acumulada do dia.\n\nSinta o seu corpo pesado... Confortável... Relaxado sobre a cama. Não há nada para fazer agora. Apenas descansar.\n\nDeixe os pensamentos irem embora... Como nuvens no céu da noite. A cada respiração... Mais calma... Mais tranquilidade... Tenha uma noite de sono profundo.",
+  "voice": "pt-BR-AntonioNeural",
+  "modo": "sono",
+  "rate": "-25%",
+  "pitch": "-4%",
+  "volume": "soft"
+}
+
+### 5. Geração de Áudio - Criação de História com Gemini + Narração (Modo Dark)
+POST {{baseUrl}}/generate-audio
+Content-Type: application/json
+Authorization: Bearer {{apiKey}}
+
+{
+  "prompt": "Crie uma narrativa curta e tensa sobre um sinal de rádio captado na Fossa das Marianas.",
+  "modo": "suspense",
+  "voice": "pt-BR-AntonioNeural"
+}
+
+### 6. Geração de Imagem
+POST {{baseUrl}}/generate-image
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "prompt": "Foto cinematográfica hiper-realista de um bunker secreto na Antártida coberto de neve e gelo, iluminação misteriosa, 8k."
+}
+
+### 7. Geração de Vídeo (.mp4) - Gemini Advanced
+POST {{baseUrl}}/generate-video
+Content-Type: application/json
+Authorization: Bearer {{apiKey}}
+
+{
+  "prompt": "Gere um vídeo cinematográfico em câmera lenta de ondas bioluminescentes quebrando em uma praia deserta à meia-noite."
+}
+
+### 8. Deep Research (Pesquisa Aprofundada)
+POST {{baseUrl}}/research
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+  "query": "Principais descobertas e mistérios não solucionados sobre a estrutura subterrânea de Derinkuyu na Turquia."
+}
+
+### 9. Download / Streaming de Mídia Gerada
+# Substitua o nome do arquivo pelo retornado em requisições anteriores
+GET {{baseUrl}}/media/video_exemplo.mp4

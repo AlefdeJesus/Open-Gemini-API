@@ -1,0 +1,41 @@
+{
+  "name": "gemini-custom-api",
+  "version": "1.0.0",
+  "description": "API REST protegida em Node.js com Express e gemini-web-sdk para geração de texto, imagens, vídeos, áudios e deep research.",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --max-http-header-size=65536 src/server.js",
+    "dev": "node --max-http-header-size=65536 --watch src/server.js",
+    "test": "node --max-http-header-size=65536 --test test/api.test.js test/ttsTextProcessor.test.js test/validatorsAndErrors.test.js test/storageAndSession.test.js",
+    "login": "node scripts/login-gemini.js",
+    "refresh-cookies": "node scripts/refresh-cookies.js",
+    "clean-profile": "node -e \"import('./src/config/env.js').then(({ config }) => import('node:fs').then(fs => { fs.rmSync(config.CHROME_PROFILE_DIR, { recursive: true, force: true }); console.log('Perfil do Chrome limpo com sucesso.'); }))\""
+  },
+  "keywords": [
+    "gemini",
+    "gemini-web-sdk",
+    "express",
+    "api-rest",
+    "ai",
+    "video-generation",
+    "image-generation",
+    "audio-generation",
+    "nodejs"
+  ],
+  "author": "Alef Santos",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "gemini-web-sdk": "^2.3.0",
+    "helmet": "^8.0.0",
+    "msedge-tts": "^2.1.0",
+    "puppeteer-core": "^25.11.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

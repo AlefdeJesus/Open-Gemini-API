@@ -1,0 +1,27 @@
+# Dependências
+node_modules/
+
+# Armazenamento de Mídias Geradas (mantendo a pasta via .gitkeep)
+storage/media/*
+!storage/media/.gitkeep
+
+# Variáveis de Ambiente e Sessões Sensíveis
+.env
+.env.*
+!.env.example
+.env.local
+*.env
+storage/chrome-profile/
+storage/chrome-profile/*
+
+# Cobertura de Testes, Logs e Arquivos Temporários
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+*.tmp
+temp/
