@@ -100,13 +100,18 @@ open-gemini-api/
    ```
    Edite o `.env` e defina uma chave forte em `API_SECRET_KEY`.
 
-3. **Autentique a sessão do Google Gemini (Opções):**
-   - **Opção recomendada (login interativo automático):**
-     ```bash
-     npm run login
-     ```
-     Uma janela do Chrome será aberta no perfil persistente (`storage/chrome-profile/`). Após concluir o login na conta Google e abrir o chat do Gemini, os cookies e tokens serão salvos automaticamente no `.env`.
-   - **Opção manual:** copie os cookies `__Secure-1PSID` e `__Secure-1PSIDTS` de `https://gemini.google.com` (via DevTools → *Application* → *Cookies*) para o `.env`.
+3. **Autentique a sessão do Google Gemini:**
+
+   > [!IMPORTANT]
+   > #### 🔑 Como Autenticar (Local vs. VPS Linux)
+   >
+   > - **No Computador Local (com interface gráfica):**
+   >   Basta executar `npm run login`. Uma janela do Chrome será aberta. Faça o login na sua conta Google e, assim que o chat do Gemini carregar, os cookies e tokens serão capturados e salvos automaticamente no `.env`.
+   >
+   > - **Na VPS Linux (Servidor Remoto):**
+   >   Servidores Linux geralmente não possuem interface gráfica nativa para abrir janelas do navegador. Você tem duas opções:
+   >   1. **Opção 1 — Via VNC / noVNC (Interface Gráfica na VPS):** Acesse a VPS com interface gráfica (XFCE, GNOME ou noVNC no navegador), abra o terminal dentro da sessão gráfica e rode `npm run login` (ou via SSH com `DISPLAY=:0 npm run login`). O Chrome abrirá na tela do VNC para você fazer o login com mouse e teclado.
+   >   2. **Opção 2 — Copiar Cookies da Sessão Manualmente (Sem VNC / Terminal Puro):** No seu computador pessoal, acesse [https://gemini.google.com](https://gemini.google.com) já logado, abra o DevTools (`F12` → *Application/Armazenamento* → *Cookies* → `https://gemini.google.com`), copie os valores de **`__Secure-1PSID`** e **`__Secure-1PSIDTS`** e cole-os diretamente no arquivo `.env` da VPS. Uma vez configurados, o servidor continuará renovando os cookies em modo headless automaticamente.
 
 4. **Inicie o servidor:**
    ```bash
@@ -206,7 +211,38 @@ curl -X POST http://localhost:3333/api2/generate-audio \
 sudo apt update && sudo apt install -y chromium-browser || sudo apt install -y chromium
 ```
 
-### 2. Executar com PM2
+### 2. Autenticação na VPS (VNC vs. Cookies Manuais)
+
+Como servidores VPS Linux normalmente operam sem ambiente gráfico de desktop, para autenticar a conta Google você deve optar por uma das duas abordagens:
+
+> [!TIP]
+> **Método A — Via VNC / noVNC (Login pelo Navegador na VPS):**
+> Se a sua VPS possui ambiente de desktop remoto (como VNC, noVNC, XFCE ou RDP):
+> 1. Conecte-se na interface gráfica da VPS.
+> 2. Abra o terminal gráfico e execute:
+>    ```bash
+>    npm run login
+>    # Ou se estiver em sessão SSH externa apontando para o display:
+>    DISPLAY=:0 npm run login
+>    ```
+> 3. O Chrome abrirá na tela do VNC. Faça o login na conta Google e os cookies serão salvos automaticamente no `.env`.
+>
+> **Método B — Sem VNC (Copiando Cookies do seu Computador para o `.env` da VPS):**
+> Se você gerencia a VPS apenas por linha de comando SSH:
+> 1. No seu computador local, abra o navegador e acesse [https://gemini.google.com](https://gemini.google.com) já conectado.
+> 2. Pressione `F12` → aba **Application** (ou **Armazenamento**) → menu lateral **Cookies** → `https://gemini.google.com`.
+> 3. Localize e copie os valores dos cookies:
+>    - `__Secure-1PSID`
+>    - `__Secure-1PSIDTS`
+>    - `__Secure-1PSIDCC`, `SID`, `HSID`, `SSID` (recomendados)
+> 4. Edite o `.env` na VPS e cole esses valores:
+>    ```env
+>    GEMINI_SECURE_1PSID=o_valor_copiado_aqui
+>    GEMINI_SECURE_1PSIDTS=o_valor_copiado_aqui
+>    ```
+> 5. A partir desse primeiro preenchimento, o cron interno do servidor (`cookieRefresher`) renovará a sessão em modo silencioso (headless) automaticamente.
+
+### 3. Executar com PM2
 
 ```bash
 npm install -g pm2
